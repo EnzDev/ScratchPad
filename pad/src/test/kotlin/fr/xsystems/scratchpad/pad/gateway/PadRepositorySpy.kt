@@ -5,6 +5,7 @@ import fr.xsystems.scratchpad.testing.spy.SavingSpy
 import java.util.UUID
 
 class PadRepositorySpy(
+    val getByIdStub: (UUID) -> Pad? = {null},
     val checkExist: (UUID) -> Boolean = {false}
 ) : PadRepository {
     val saveSpy = SavingSpy<Pad>()
@@ -15,5 +16,10 @@ class PadRepositorySpy(
     override fun existById(uuid: UUID): Boolean {
         existSpy.trigger(uuid)
         return checkExist(uuid)
+    }
+
+    override fun getById(uuid: UUID): Pad? {
+        getSpy.trigger(uuid)
+        return getByIdStub.invoke(uuid)
     }
 }
